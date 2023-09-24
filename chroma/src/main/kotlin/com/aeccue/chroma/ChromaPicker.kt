@@ -47,6 +47,11 @@ import com.aeccue.chroma.component.lightness
 import com.aeccue.chroma.component.rememberHSB
 import kotlinx.coroutines.flow.collectLatest
 
+/**
+ * @param initialColor - The initial color of the color picker
+ * @param style - Styling options to control the look of the color picker
+ * @param onPick - Callback for whenever the color is changed
+ */
 @Composable
 public fun ChromaPicker(
     modifier: Modifier = Modifier,
@@ -60,6 +65,8 @@ public fun ChromaPicker(
         initialColor = initialColor,
         extendForBlackAndWhite = LocalChromaPickerStyle.current.hue.includeBlackAndWhite
     )
+
+    // To keep track of color of content based on current chosen color
     val contentColorState = remember(hsb) {
         val contentColor =
             if (hsb.color.lightness.value >= 0.5f) Color.Black
@@ -69,6 +76,7 @@ public fun ChromaPicker(
 
     val onPickState = rememberUpdatedState(newValue = onPick)
     LaunchedEffect(hsb) {
+        // hsb is tracked to update content color and call callback
         snapshotFlow { hsb.color }.collectLatest { newColor ->
             contentColorState.value =
                 if (newColor.lightness.value >= 0.5) {
@@ -82,6 +90,7 @@ public fun ChromaPicker(
 
     val currentColorSpace = remember { mutableStateOf(ColorSpace.HSL) }
 
+    // Provide content color and style as CompositionLocal to avoid passing as params
     CompositionLocalProvider(
         LocalContentColorState provides contentColorState,
         LocalChromaPickerStyle provides style

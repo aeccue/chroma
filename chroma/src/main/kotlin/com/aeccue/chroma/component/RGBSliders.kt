@@ -18,6 +18,7 @@ package com.aeccue.chroma.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import kotlin.math.roundToInt
 
 @Composable
 internal fun RGBSliders(
@@ -25,30 +26,30 @@ internal fun RGBSliders(
     onChange: (RGB) -> Unit
 ) {
     val rgb by rememberRGB(hsb = hsb)
-    IntSlider(
+    Slider(
         title = "R",
-        value = rgb.red.value,
+        value = rgb.red.value.toFloat(),
         range = 0f..255f,
         maxDigits = 3
     ) { newRed ->
-        onChange(rgb.copy(red = Red(newRed)))
+        onChange(rgb.copy(red = Red(newRed.roundToInt())))
     }
 
-    IntSlider(
+    Slider(
         title = "G",
-        value = rgb.green.value,
+        value = rgb.green.value.toFloat(),
         range = 0f..255f,
         maxDigits = 3
     ) { newGreen ->
-        onChange(rgb.copy(green = Green(newGreen)))
+        onChange(rgb.copy(green = Green(newGreen.roundToInt())))
     }
 
-    IntSlider(
+    Slider(
         title = "B",
-        value = rgb.blue.value,
+        value = rgb.blue.value.toFloat(),
         range = 0f..255f,
         maxDigits = 3
     ) { newBlue ->
-        onChange(rgb.copy(blue = Blue(newBlue)))
+        onChange(rgb.copy(blue = Blue(newBlue.roundToInt())))
     }
 }

@@ -106,6 +106,9 @@ internal value class Green(val value: Int)
 internal value class Blue(val value: Int)
 
 
+/**
+ * @param extendForBlackAndWhite - Whether or not to extend the hue bar to include white on the very left and black on the very right
+ */
 @Composable
 internal fun rememberHSB(
     initialColor: Color,

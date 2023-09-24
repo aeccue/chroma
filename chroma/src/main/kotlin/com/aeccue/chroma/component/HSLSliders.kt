@@ -26,7 +26,7 @@ internal fun HSLSliders(
 ) {
     val hsl = rememberHSL(hsb)
 
-    FloatSlider(
+    Slider(
         title = "H",
         value = hsl.hue.value,
         range = 0f..360f,
@@ -35,7 +35,7 @@ internal fun HSLSliders(
         onHueChange(Hue(newHue))
     }
 
-    FloatSlider(
+    Slider(
         title = "S",
         value = hsl.saturation.value * 100,
         range = 0f..100f,
@@ -47,7 +47,7 @@ internal fun HSLSliders(
         onSaturationBrightnessChange(saturationB, brightness)
     }
 
-    FloatSlider(
+    Slider(
         title = "L",
         value = hsl.lightness.value * 100,
         range = 0f..100f,

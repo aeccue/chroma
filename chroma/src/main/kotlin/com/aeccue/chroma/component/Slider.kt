@@ -33,7 +33,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -57,12 +56,13 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 
 @Composable
-internal fun FloatSlider(
+internal fun Slider(
     title: String?,
     value: Float,
     range: ClosedFloatingPointRange<Float>,
     modifier: Modifier = Modifier,
     keyboardInput: Boolean = true,
+    // max digits defaults to number of digits of current max range
     maxDigits: Int = if (keyboardInput) range.endInclusive.toInt().numberOfDigits else -1,
     trackColor: Brush = SolidColor(LocalChromaPickerStyle.current.slider.trackColor),
     dotColor: Color = LocalChromaPickerStyle.current.slider.dotColor,
@@ -127,6 +127,8 @@ internal fun FloatSlider(
                 color = dotColor,
                 modifier = Modifier
                     .absoluteOffset {
+                        // Use current value to track current position of dot
+                        // Subtract half the dot size to center the dot
                         val dotHalfSizePx = dotSize.roundToPx() / 2
                         IntOffset(
                             x = ((valueState.value - range.start) / range.length * maxPx).roundToInt() - dotHalfSizePx,
@@ -180,146 +182,6 @@ internal fun FloatSlider(
         }
     }
 }
-
-@Composable
-internal fun IntSlider(
-    title: String?,
-    value: Int,
-    range: ClosedFloatingPointRange<Float>,
-    modifier: Modifier = Modifier,
-    keyboardInput: Boolean = true,
-    maxDigits: Int = if (keyboardInput) range.endInclusive.toInt().numberOfDigits else -1,
-    trackColor: Brush = SolidColor(LocalChromaPickerStyle.current.slider.trackColor),
-    dotColor: Color = LocalChromaPickerStyle.current.slider.dotColor,
-    onValueChange: (Int) -> Unit
-) {
-    val valueState = rememberUpdatedState(newValue = value)
-    val onValueChangeState = rememberUpdatedState(newValue = onValueChange)
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(LocalChromaPickerStyle.current.slider.height),
-        horizontalArrangement = Arrangement.spacedBy(LocalChromaPickerStyle.current.slider.inputGap),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (title != null) {
-            Text(
-                text = title,
-                color = LocalContentColorState.current.value,
-                style = LocalChromaPickerStyle.current.textStyles.sliderLabel
-            )
-        }
-
-        BoxWithConstraints(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            val maxPx = constraints.maxWidth.toFloat()
-            val rawOffset = remember {
-                mutableFloatStateOf(value.toFloat() / range.endInclusive * maxPx)
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(LocalChromaPickerStyle.current.slider.trackWidth)
-                    .clip(CircleShape)
-                    .background(brush = trackColor)
-                    .shadow(
-                        elevation = LocalChromaPickerStyle.current.slider.trackElevation,
-                        shape = CircleShape
-                    )
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures { _, dragAmount ->
-                            val newOffset = (rawOffset.floatValue + dragAmount).coerceIn(0f, maxPx)
-                            rawOffset.floatValue = newOffset
-                            val newValue = (newOffset / maxPx * range.endInclusive).roundToInt()
-                            if (newValue != valueState.value) {
-                                onValueChangeState.value.invoke(newValue)
-                            }
-                        }
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onPress = { newPosition ->
-                                rawOffset.floatValue =
-                                    newPosition.x
-                                        .coerceIn(0f, maxPx)
-                                        .roundToInt()
-                                        .toFloat()
-                                val newValue = (rawOffset.floatValue / maxPx * range.endInclusive)
-                                    .roundToInt()
-                                if (newValue != valueState.value) {
-                                    onValueChangeState.value.invoke(newValue)
-                                }
-                            }
-                        )
-                    }
-            )
-
-            val dotSize = LocalChromaPickerStyle.current.slider.dotSize
-            Dot(
-                size = dotSize,
-                color = dotColor,
-                modifier = Modifier
-                    .absoluteOffset {
-                        val dotHalfSizePx = dotSize.roundToPx() / 2
-                        IntOffset(
-                            x = (valueState.value.toFloat() / range.endInclusive * maxPx).roundToInt() - dotHalfSizePx,
-                            y = 0
-                        )
-                    }
-                    .shadow(
-                        elevation = LocalChromaPickerStyle.current.slider.dotElevation,
-                        shape = CircleShape
-                    )
-            )
-        }
-
-        if (keyboardInput) {
-            val focusManager = LocalFocusManager.current
-            val text by rememberUpdatedState(value.toString())
-            var isTextEmpty by remember { mutableStateOf(false) }
-
-            ValueInputField(
-                value = if (isTextEmpty) "" else text,
-                onValueChange = { newValue ->
-                    if (newValue.isEmpty()) {
-                        isTextEmpty = true
-                    } else {
-                        newValue.toIntOrNull()?.let {
-                            if (range.contains(it.toFloat())) {
-                                isTextEmpty = false
-                                onValueChangeState.value.invoke(it)
-                            }
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .width(
-                        with(LocalDensity.current) {
-                            LocalChromaPickerStyle.current.textStyles.inputField.fontSize.toDp() * maxDigits
-                        }
-                    ),
-                textStyle = LocalChromaPickerStyle.current.textStyles.inputField.copy(textAlign = TextAlign.Center),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-            ) { focusState ->
-                if (!focusState.isFocused && !focusState.hasFocus) {
-                    if (isTextEmpty) {
-                        isTextEmpty = false
-                        onValueChangeState.value.invoke(value)
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 private inline val ClosedFloatingPointRange<Float>.length: Float
     get() = endInclusive - start

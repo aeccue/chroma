@@ -14,7 +14,7 @@ internal fun HueSlider(
     val saturationCache = remember { mutableStateOf(SaturationB(0.35f)) }
     val brightnessCache = remember { mutableStateOf(Brightness(0.65f)) }
 
-    FloatSlider(
+    Slider(
         title = null,
         value = hsb.hue.value,
         range = if (LocalChromaPickerStyle.current.hue.includeBlackAndWhite) -5f..365f else 0f..360f,
