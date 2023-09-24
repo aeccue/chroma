@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                ChromaPicker(initialColor = Color.White, onPick = {})
+                ChromaPicker {}
             }
         }
     }

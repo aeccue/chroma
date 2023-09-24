@@ -16,32 +16,24 @@
 
 package com.aeccue.chroma
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import com.aeccue.chroma.component.ColorSpace
 import com.aeccue.chroma.component.ColorSpaceSelector
 import com.aeccue.chroma.component.HSBArea
@@ -57,8 +49,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 public fun ChromaPicker(
-    initialColor: Color,
     modifier: Modifier = Modifier,
+    initialColor: Color = Color.White,
     style: ChromaPickerStyle = ChromaPickerStyle(
         textStyles = ChromaPickerStyle.TextStyles(LocalTextStyle.current)
     ),
