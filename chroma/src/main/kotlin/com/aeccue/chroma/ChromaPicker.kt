@@ -42,6 +42,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import com.aeccue.chroma.component.ColorSpace
+import com.aeccue.chroma.component.ColorSpaceSelector
 import com.aeccue.chroma.component.HSBArea
 import com.aeccue.chroma.component.HSLSliders
 import com.aeccue.chroma.component.HexValueInputField
@@ -52,10 +54,6 @@ import com.aeccue.chroma.component.RGBSliders
 import com.aeccue.chroma.component.lightness
 import com.aeccue.chroma.component.rememberHSB
 import kotlinx.coroutines.flow.collectLatest
-
-private enum class ColorSpace {
-    HSL, RGB, HEX
-}
 
 @Composable
 public fun ChromaPicker(
@@ -156,51 +154,4 @@ public fun ChromaPicker(
             }
         }
     }
-}
-
-@Composable
-private fun ColorSpaceSelector(
-    currentColorSpace: State<ColorSpace>,
-    modifier: Modifier = Modifier,
-    onSelect: (ColorSpace) -> Unit
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(LocalChromaPickerStyle.current.colorSpace.height),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        for (colorSpace in ColorSpace.entries) {
-            ColorSpaceTitle(
-                colorSpace = colorSpace,
-                currentColorSpace = currentColorSpace
-            ) {
-                onSelect(colorSpace)
-            }
-        }
-    }
-}
-
-@Composable
-private fun ColorSpaceTitle(
-    colorSpace: ColorSpace,
-    currentColorSpace: State<ColorSpace>,
-    modifier: Modifier = Modifier,
-    onSelect: () -> Unit
-) {
-    val isSelected by remember { derivedStateOf { currentColorSpace.value == colorSpace } }
-
-    Text(
-        text = colorSpace.name,
-        modifier = modifier
-            .clip(LocalChromaPickerStyle.current.colorSpace.titleIndicationShape)
-            .clickable(onClick = onSelect)
-            .padding(LocalChromaPickerStyle.current.colorSpace.titlePadding),
-        color = LocalContentColorState.current.value.copy(
-            alpha = if (isSelected) 1f else LocalChromaPickerStyle.current.deselectedAlpha
-        ),
-        fontWeight = if (isSelected) FontWeight.Bold else null,
-        style = LocalChromaPickerStyle.current.textStyles.colorSpaceTitle
-    )
 }
