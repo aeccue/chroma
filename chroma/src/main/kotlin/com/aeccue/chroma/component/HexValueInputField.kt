@@ -36,6 +36,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import com.aeccue.chroma.R
@@ -90,7 +91,7 @@ internal fun HexValueInputField(
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_tag),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.cd_hex_icon),
                     modifier = Modifier.size(LocalChromaPickerStyle.current.inputField.iconSize)
                 )
             },

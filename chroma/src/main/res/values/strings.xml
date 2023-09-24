@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cd_hex_icon">Pound icon for the hex input text field</string>
 </resources>
