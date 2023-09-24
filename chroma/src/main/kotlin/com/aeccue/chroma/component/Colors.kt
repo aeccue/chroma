@@ -107,7 +107,8 @@ internal value class Blue(val value: Int)
 
 
 /**
- * @param extendForBlackAndWhite - Whether or not to extend the hue bar to include white on the very left and black on the very right
+ * @param extendForBlackAndWhite - Whether or not to extend the hue bar to include white on the very
+ *                                 left and black on the very right
  */
 @Composable
 internal fun rememberHSB(
@@ -115,9 +116,11 @@ internal fun rememberHSB(
     extendForBlackAndWhite: Boolean = false
 ) = remember(initialColor) {
     when {
+        // White will have a hue of -5
         extendForBlackAndWhite && initialColor == Color.White ->
             HSBState(Hue(-5f), SaturationB(0f), Brightness(1f))
 
+        // Black will have a hue of 365
         extendForBlackAndWhite && initialColor == Color.Black ->
             HSBState(Hue(365f), SaturationB(0f), Brightness(0f))
 

@@ -61,6 +61,7 @@ public fun ChromaPicker(
     ),
     onPick: (Color) -> Unit
 ) {
+    // HSB will be the main value that all sliders will track
     val hsb = rememberHSB(
         initialColor = initialColor,
         extendForBlackAndWhite = LocalChromaPickerStyle.current.hue.includeBlackAndWhite
@@ -79,6 +80,7 @@ public fun ChromaPicker(
         // hsb is tracked to update content color and call callback
         snapshotFlow { hsb.color }.collectLatest { newColor ->
             contentColorState.value =
+                // Switch content color to white if lightness is too low
                 if (newColor.lightness.value >= 0.5) {
                     Color.Black
                 } else {

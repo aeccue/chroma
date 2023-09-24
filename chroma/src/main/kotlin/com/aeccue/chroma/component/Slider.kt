@@ -152,6 +152,7 @@ internal fun Slider(
                     if (newValue.isEmpty()) {
                         isTextEmpty = true
                     } else {
+                        // Constrain value to given range
                         newValue.toIntOrNull()?.toFloat()?.let {
                             if (range.contains(it)) {
                                 isTextEmpty = false
@@ -186,6 +187,7 @@ internal fun Slider(
 private inline val ClosedFloatingPointRange<Float>.length: Float
     get() = endInclusive - start
 
+// returns the number of digits in the Integer
 private inline val Int.numberOfDigits: Int
     get() = when (this) {
         0 -> 1

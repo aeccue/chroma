@@ -23,6 +23,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import com.aeccue.chroma.ChromaPickerStyle
 
+// Not expected to change dynamically so can be static
 internal val LocalChromaPickerStyle = staticCompositionLocalOf { ChromaPickerStyle() }
 
 internal val LocalContentColorState = compositionLocalOf<State<Color>> {
