@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Chroma"
+include(":chroma")
+include(":sample")
